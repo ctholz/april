@@ -23,12 +23,12 @@ var env = {
 
 	"production": {
 		mode: "production",
-		port: process.env.$PORT
+		port: process.env.PORT
 	}
 }
 
 module.exports = function(mode) {
 	// Set env
-	config.env = env[mode || process.argv[2] || "development"] || env.development
+	config.env = env[process.env.NODE_ENV || mode || process.argv[2] || "development"] || env.development
 	return config
 }
