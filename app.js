@@ -32,5 +32,6 @@ app.use(serve(path.join(__dirname, 'public')));
 app.use(compress());
 
 if (!module.parent) {
+	console.log("CONFIG: ",config)
    app.listen(config.env.port);
 }

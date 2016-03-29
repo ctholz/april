@@ -23,7 +23,7 @@ var env = {
 
 	"production": {
 		mode: "production",
-		port: process.env.PORT
+		port: process.env.$PORT
 	}
 }
 
