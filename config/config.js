@@ -13,7 +13,7 @@ var config = {
 var env = {
 	"development": {
 		mode: "development",
-
+		port: "3000"
 	},
 
 	"staging": {
@@ -23,6 +23,7 @@ var env = {
 
 	"production": {
 		mode: "production",
+		port: process.env.PORT
 	}
 }
 

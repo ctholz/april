@@ -6,6 +6,9 @@
     "start": "node app.js",
     "test": "mocha"
   },
+  "engines": {
+    "node": "5.8.0"
+  },
   "dependencies": {
     "co-body": "^4.0.0",
     "co-views": "^2.1.0",
