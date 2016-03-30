@@ -16,10 +16,12 @@ const render = views(__dirname + '/../views', {
 });
 
 
-module.exports.process = function *process(ctx) {
+module.exports.process = function *process() {
 
   var ctx = this;
   console.log("Receiving Twilio response - ",ctx.body);
+  var response = yield parse(this);
+  console.log("\n\n",response,"\n\n");
 
   // Get routine state
   const routineState = yield db.RoutineState.findOne(function(err, state) {
@@ -28,7 +30,7 @@ module.exports.process = function *process(ctx) {
     if (!state) {
       console.log("@responses/process, no routineState found, redirecting...");
       ctx.status = 307
-      ctx.redirect('/message')
+      ctx.redirect('/messages')
     }
   })
 
