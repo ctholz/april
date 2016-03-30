@@ -19,6 +19,7 @@ const render = views(__dirname + '/../views', {
 module.exports.process = function *process(ctx) {
 
   var ctx = this;
+  console.log("Receiving Twilio response - ",ctx.body);
 
   // Get routine state
   const routineState = yield db.RoutineState.findOne(function(err, state) {
@@ -32,8 +33,8 @@ module.exports.process = function *process(ctx) {
   })
 
   // Construct TWIML response
-  var response = new twilioClient.TwimlResponse();
-
+  // var response = new twilioClient.TwimlResponse();
+  console.log('\n\n Exited the generator...',routineState,'\n\n');
 };
 
 
