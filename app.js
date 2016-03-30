@@ -1,6 +1,6 @@
 'use strict';
 const messages = require('./controllers/messages');
-//const responses = require('./controllers/response');
+const responses = require('./controllers/responses');
 
 const compress = require('koa-compress');
 const logger = require('koa-logger');
@@ -29,10 +29,11 @@ app.use(route.get('/async', messages.delay));
 app.use(route.get('/promise', messages.promise));
 
 // CH - Routes
-//app.use(route.post('/process/', responses.process));
+app.use(route.post('/process', responses.process));
 
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));
+
 
 // Compress
 app.use(compress());

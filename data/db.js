@@ -14,13 +14,13 @@ mongoose.connect(uristring, function(err, res) {
 });
 
 
-/* Define Model: note */
+/* Define Model: Note */
 var noteSchema = new mongoose.Schema({
 	created_at: { type: Date, default: Date.now },
 	body: String
 });
 
-/* Define Model: goal */
+/* Define Model: Goal */
 var goalSchema = new mongoose.Schema({
 	created_at: { type: Date, default: Date.now },
 	body: String,
@@ -28,16 +28,25 @@ var goalSchema = new mongoose.Schema({
 	notes: String
 });
 
+/* Define model: RoutineState */
+	// NOTE: global, not long term
+var routineStateSchema = new mongoose.Schema({
+	callback: { type: String, default: '/routine/default'},
+	routine: { type: String, default: 'default' },
+	updated_at: { type: Date, default: Date.now }
+});
+
 /* Instantiate Models */
 var Note = mongoose.model('Note', noteSchema);
 var Goal = mongoose.model('Goal', goalSchema);
-
+var RoutineState = mongoose.model('RoutineState', routineStateSchema);
 
 // TODO - model validation
 
 /* Export Models */
 module.exports = {
 	'Goal': Goal,
-	'Note': Note
+	'Note': Note,
+	'RoutineState': RoutineState
 };
 
