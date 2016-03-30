@@ -1,11 +1,15 @@
 {% extends 'layout.html' %}
 
-{% block title %}Messages{% endblock %}
+{% block title %}Notes{% endblock %}
 
 {% block content %}
   <ul class="messages">
-    {% for message in messages %}
-      <li class="message">{{ message.message }}</li>
+  	<li class="message"><b>Notes...</b></li>
+    {% for note in notes %}
+      <li class="message">
+      	{{ note.body }}
+     	<span class="message-date">{{ note.created_at.toDateString() }}</span>
+      </li>
     {% endfor %}
   </ul>
   <form action="/messages" method="post" id="message-form">

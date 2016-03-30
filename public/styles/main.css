@@ -23,3 +23,8 @@ textarea {
   font: 30px helvetica;
   font-weight: 100;
 }
+
+.message-date {
+  font-size: 10pt;
+  font-style: italic;
+}

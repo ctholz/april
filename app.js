@@ -1,5 +1,7 @@
 'use strict';
 const messages = require('./controllers/messages');
+//const responses = require('./controllers/response');
+
 const compress = require('koa-compress');
 const logger = require('koa-logger');
 const serve = require('koa-static');
@@ -11,6 +13,7 @@ const app = module.exports = koa();
 // CH 
 const config = require('./config/config')();
 const twilioNotifications = require('./middleware/twilioNotifications')
+// const db = require('./data/db');
 
 // Logger
 app.use(logger());
@@ -25,6 +28,9 @@ app.use(route.post('/messages', messages.create));
 app.use(route.get('/async', messages.delay));
 app.use(route.get('/promise', messages.promise));
 
+// CH - Routes
+//app.use(route.post('/process/', responses.process));
+
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));
 
@@ -32,6 +38,5 @@ app.use(serve(path.join(__dirname, 'public')));
 app.use(compress());
 
 if (!module.parent) {
-	console.log("CONFIG: ",config,process.env.NODE_ENV,'\n',process.env.PORT)
    app.listen(config.env.port);
 }
