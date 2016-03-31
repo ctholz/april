@@ -60,7 +60,9 @@ module.exports = {
 			
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
-			return twilio_client.sendSMS("+17134126344", "Goal Reminder: " + message);
+			twilio_client.sendSMS("+17134126344", "Goal Reminder: " + message);
+
+			this.status = 200;
 
 		} catch(err) {
 			console.error("[ Error ]... @" + this.path + " - ",err)
