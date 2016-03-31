@@ -3,21 +3,24 @@ const views = require('co-views');
 const parse = require('co-body');
 const db = require('../data/db');
 
-
-
+/* Routing Boilerplate */
 const render = views(__dirname + '/../views', {
   map: { html: 'swig' }
 });
 
+
 module.exports.home = function *home(ctx) {
   var notes = yield db.Note.find()
-  this.body = yield render('list', { 'notes': notes });
+  var today = new Date();
+  today.setHours(0);
+  var goal = yield db.Goal.find({ created_at: { "$gte": today }}).sort('-created_at');
 
-  //this.body = yield render('list', { 'messages': messages });
+  // TODO - clean up the process of fetching today's goal
+  this.body = yield render('list', { 'notes': notes, 'goal': (goal.length == 0) ? null : goal[0] });
 };
 
 module.exports.list = function *list() {
-  this.body = yield yield db.Note.find(function(err, notes) {
+  this.body = yield db.Note.find(function(err, notes) {
     if (err)
       console.error("Error fetching NOTES - ",err);
   })
@@ -43,9 +46,22 @@ module.exports.fetch = function *fetch(id) {
   // this.body = yield message;
 };
 
+/* ENDPOINT: delete note */
+module.exports.delete = function *(id) {
+  try {
+      yield db.Note.findByIdAndRemove(id);
+      this.redirect('/');
+  } catch (err) {
+    console.error("[ Error ]... @" + this.path + " removing Note id = " + id + " - " + err);
+  }
+};
+
+/* ENDPOINT: create note */
 module.exports.create = function *create() {
 
   var res = yield parse(this);
+
+  console.log("Res: ",res)
 
   // For Twilio compatibility
   var body = ('Body' in res) ? res['Body'] : res.message;

@@ -18,23 +18,34 @@ const render = views(__dirname + '/../views', {
 
 module.exports.process = function *process() {
 
-  var ctx = this;
-  var response = yield parse(this);
+  /* IF REDIRECTING, make sure to set status to 307 */
 
-  // Get routine state
-  const routineState = yield db.RoutineState.findOne(function(err, state) {
-    if (err)
-      console.error("Error finding routineState - ",err);
-    if (!state) {
-      console.log("@responses/process, no routineState found, redirecting...");
-      ctx.status = 307
-      ctx.redirect('/messages')
-    }
-  })
+  try {
+     const routineState = yield db.RoutineState.findOne();
+     console.log("@responses/process, routineState = ",routineState);
+
+     if (!routineState || routineState.routine == 'default') {
+      this.status = 307;
+      return this.redirect('/messages');
+
+     } else {
+
+      if (routineState.routine == 'goal') {
+        this.status = 307;
+        return this.redirect(routineState.callback);
+       } else {
+          return console.error("Error: routineState doesn't match - ",routineState);
+       }
+     }
+  }
+  catch(err) {
+    console.error("Error finding routineState - ",err);
+    return ctx.throw(500)
+  }
 
   // Construct TWIML response
   // var response = new twilioClient.TwimlResponse();
-  //console.log('\n\n Exited the generator...',routineState,'\n\n');
+  // console.log('\n\n Exited the generator...',routineState,'\n\n');
 };
 
 

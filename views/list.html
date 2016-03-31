@@ -3,7 +3,17 @@
 {% block title %}Notes{% endblock %}
 
 {% block content %}
-  <ul class="messages">
+
+  
+
+  {% if goal %}
+    <ul>
+  	  <li class="goal"><b>Today's Goal: </b></li>
+      <li class="goal">{{ goal.body }}</li>
+    </ul>
+  {% endif %}
+
+  <ul class="messages">  	
   	<li class="message"><b>Notes...</b></li>
     {% for note in notes %}
       <li class="message">
