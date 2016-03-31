@@ -1,4 +1,7 @@
-
+/* Cron - calls Goal Routine, requires method name as CLI parameter
+ * ----------------------------------------------------------------
+ *
+ */
 
 var request = require('request');
 var root_url = (process.env.NODE_ENV) ? 'https://blooming-springs-67127.herokuapp.com' : 'http://localhost:3000';

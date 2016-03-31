@@ -54,9 +54,8 @@ module.exports = {
 	remind: function *() {
 		try {
 			// TODO - find TODAY's goal 
-			var today = new Date();
-			today.setHours(0);
-			var goal = yield db.Goal.find({ created_at: { "$gte": today }}).sort('-created_at');
+
+			var goal = yield db.Goal.find({ created_at: { "$gte": get_today_delineator() }}).sort('-created_at');
 			
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
@@ -72,17 +71,16 @@ module.exports = {
 
 	close: function *() {
 		try {
-			var today = new Date();
-			today.setHours(0);
-			
-			var goal = yield db.Goal.find({ created_at: { "$gte": today }}).sort('-created_at');
+
+			var goal = yield db.Goal.find({ created_at: { "$gte": get_today_delineator() }}).sort('-created_at');
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
-			twilio.client.sendSMS(config.twilio.admin, "Today's goal was: '" + message + "' How'd you do?");
+			twilio_client.sendSMS(config.twilio.admin, "Today's goal was: '" + message + "' Did you complete it?");
 
 			const routineState = yield db.RoutineState.findOne();
 			yield routineState.update({ routine: 'goal', callback: '/routines/goal/update' });
 
+			this.status = 200;
 			return;
 
 		} catch(err) {
@@ -92,11 +90,50 @@ module.exports = {
 
 	update: function *() {
 
+		// V1: assumed response format: "Y, it was a good day."
+		const delineator = ", ";
+
 		try {
+			var goal = yield db.Goal.find({ created_at: { "$gte": get_today_delineator() }}).sort('-created_at');
+			if (goal.length == 0) {
+				return console.error("[ Error ]... No goal for today found.");
+			} else {
+				goal = goal[0];
+			}
+
+			var res = yield parse(this);
+
+			// Simple validation
+			if (res['Body'].split(delineator).length < 2) {
+				twilio_client.sendSMS(config.twilio.admin, "No delineator found. Response should look like: 'Y, your notes here.'");
+				this.status = 400;
+				return;
+			}
+
+			// Parse input
+			var completed = res['Body'].split(delineator)[0].toLowerCase().startsWith('y');
+			var notes = res['Body'].split(delineator)[1];
+
+			// Update goal document
+			yield goal.update({ completed: completed, notes: notes });
+
+			// Reset routine state
+			yield db.RoutineState.findOneAndUpdate({ routine: 'default', callback: '/routine/default' })
+
+			console.log("@/routines/goal/update | Goal: {completed: " + completed + ", notes: " + notes + "}");
+
+			this.status = 200;
+			return;
 
 		} catch(err) {
-
+			console.error("[ Error ]... @" + this.path + " - ",err)
 		}
-
 	}
 }
+
+
+function get_today_delineator() {
+	var today = new Date();
+	today.setHours(0);
+	return today;
+};
