@@ -47,7 +47,10 @@ module.exports.create = function *create() {
 
   var res = yield parse(this);
 
-  yield db.Note.create({ body: res.message }, function(err, note) {
+  // For Twilio compatibility
+  var body = ('Body' in res) ? res['Body'] : res.message;
+
+  yield db.Note.create({ body: body }, function(err, note) {
     if (err) console.error("Error creating new note: ",err);
     else console.log("New NOTE created: ", note);
   });
