@@ -9,7 +9,9 @@
   {% if goal %}
     <ul>
   	  <li class="goal"><b>Today's Goal: </b></li>
-      <li class="goal">{{ goal.body }}</li>
+      <li class="goal">
+      	[ {% if goal.completed %}<b>X</b>{% else %} &nbsp; {% endif %} ]
+      	{{ goal.body }}</li>
     </ul>
   {% endif %}
 
