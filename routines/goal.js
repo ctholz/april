@@ -27,7 +27,7 @@ module.exports = {
 			// TODO - what if routineState is missing?
 
 			// Update routineState to next step
-			yield routineState.update({ callback: '/routines/goal/create' })
+			yield routineState.update({ callback: '/routines/goal/create', routine: 'goal' })
 		}
 		catch(err) {
 			console.error("[ Error ]... @" + this.path + " - ",err)
