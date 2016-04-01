@@ -39,6 +39,8 @@ app.use(route.all('/routines/goal/close', routines.goal.close));
 app.use(route.all('/routines/goal/update', routines.goal.update));
 app.use(route.all('/routines/goal/', routines.goal.open)); // Default route in case callback set improperly
 
+app.use(route.get('/routines/mantra', routines.mantra.remind)); // Default route
+
 // Serve static files
 app.use(serve(path.join(__dirname, 'public')));
 

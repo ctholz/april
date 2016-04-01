@@ -4,8 +4,9 @@
 
 */
 const goal = require('./goal');
-
+const mantra = require('./mantra');
 
 module.exports = {
-	goal: goal
+	goal:       goal,
+	mantra:     mantra
 };
