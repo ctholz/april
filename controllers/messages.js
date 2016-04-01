@@ -12,7 +12,7 @@ const render = views(__dirname + '/../views', {
 module.exports.home = function *home(ctx) {
   
   // Fetch notes
-  var notes = yield db.Note.find()
+  var notes = yield db.Note.find().sort({ _id: -1 })
   
   // Fetch today's goal
     // TODO - clean up the process of fetching today's goal
