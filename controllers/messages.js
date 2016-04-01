@@ -10,13 +10,28 @@ const render = views(__dirname + '/../views', {
 
 
 module.exports.home = function *home(ctx) {
+  
+  // Fetch notes
   var notes = yield db.Note.find()
+  
+  // Fetch today's goal
+    // TODO - clean up the process of fetching today's goal
   var today = new Date();
   today.setHours(0);
   var goal = yield db.Goal.find({ created_at: { "$gte": today }}).sort('-created_at');
+  goal = (goal.length == 0) ? null : goal[0]
 
-  // TODO - clean up the process of fetching today's goal
-  this.body = yield render('list', { 'notes': notes, 'goal': (goal.length == 0) ? null : goal[0] });
+  // Fetch tags, uniqify using Set
+  var tags = new Set();
+  if (notes) notes.forEach(function(note) { if (note.tag) tags.add(note.tag) });
+  tags = Array.from(tags);
+
+  // Render
+  this.body = yield render('list', {
+    'notes': notes,
+    'goal': goal,
+    'tags': tags
+  });
 };
 
 module.exports.list = function *list() {
@@ -61,29 +76,33 @@ module.exports.create = function *create() {
 
   var res = yield parse(this);
 
-  console.log("Res: ",res)
-
   // For Twilio compatibility
   var body = ('Body' in res) ? res['Body'] : res.message;
 
-  yield db.Note.create({ body: body }, function(err, note) {
+  // Parse tag, if any, from note
+    // Regex *should* match #tag body
+  var tag_regex = /^#(\S+)\s(.*)/;
+  
+  var fields = function(match) {
+    return {
+      tag: (match) ? match[1] : null,
+      body: (match) ? match[2] : body
+    }
+  }(body.match(tag_regex));
+
+  yield db.Note.create(fields, function(err, note) {
     if (err) console.error("Error creating new note: ",err);
     else console.log("New NOTE created: ", note);
   });
 
   this.redirect('/');
-
-  // const message = yield parse(this);
-  // const id = messages.push(message) - 1;
-  // message.id = id;
-  // this.redirect('/');
 };
+
 
 
 /* This came stock with the scaffolding... 
  * not sure what it is used for
  */
-
 const asyncOperation = () => callback =>
   setTimeout(
     () => callback(null, 'this was loaded asynchronously and it took 2 seconds to complete'),

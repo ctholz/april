@@ -17,7 +17,8 @@ mongoose.connect(uristring, function(err, res) {
 /* Define Model: Note */
 var noteSchema = new mongoose.Schema({
 	created_at: { type: Date, default: Date.now },
-	body: String
+	body: String,
+	tag: String
 });
 
 /* Define Model: Goal */

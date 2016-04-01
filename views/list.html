@@ -17,8 +17,18 @@
 
   <ul class="messages">  	
   	<li class="message"><b>Notes...</b></li>
+
+  	{% if tags.length > 0 %}
+  	<li>
+	  	{% for tag in tags %}
+	  	  <span class="tag tag-header">#{{tag}}</span>
+	  	{% endfor %}
+	</li>
+	{% endif %}
+
     {% for note in notes %}
       <li class="message">
+      	{% if note.tag %}<span class="tag">#{{note.tag}}</span>{% endif %}
       	{{ note.body }}
      	<span class="message-date">{{ note.created_at.toDateString() }}</span>
       </li>

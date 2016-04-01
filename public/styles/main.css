@@ -29,3 +29,19 @@ textarea {
   font-style: italic;
 }
 
+.tag {
+  background-color: #fff200; /* thanks Vox! */
+  font-size: 12pt;
+  padding: 0 2px;
+}
+
+.tag-header {
+  font-size: 30px;
+}
+
+
+@media only screen and (max-device-width: 667px) {
+  ul {
+    margin: 10px auto 0;
+  }
+}
