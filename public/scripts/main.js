@@ -1,7 +1,6 @@
 
 
 $(function() {
-
 	$('.tag-header').on('click', sortByHeader);
 });
 
@@ -25,5 +24,6 @@ function sortByHeader(e) {
 		});
 	}
 
+	$('.selected').removeClass('selected');
 	$(this).toggleClass('selected');
 };

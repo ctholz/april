@@ -90,7 +90,7 @@ module.exports = {
 		const delineator = ", ";
 
 		try {
-			var goal = yield db.Goal.find({ created_at: { "$gte": get_today_delineator() }}).sort('-created_at');
+			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');
 			if (goal.length == 0) {
 				return console.error("[ Error ]... No goal for today found.");
 			} else {
