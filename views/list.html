@@ -30,6 +30,9 @@
       <li class="message" data-tag="{{note.tag}}">
       	{% if note.tag %}<span class="tag">#{{note.tag}}</span>{% endif %}
       	{{ note.body }}
+        {% for medium in note.media %}
+          <img src="{{medium}}" width="50"/>
+        {% endfor %}
      	<span class="message-date">{{ note.created_at.toDateString() }}</span>
       </li>
     {% endfor %}

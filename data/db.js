@@ -18,7 +18,8 @@ mongoose.connect(uristring, function(err, res) {
 var noteSchema = new mongoose.Schema({
 	created_at: { type: Date, default: Date.now },
 	body: String,
-	tag: String
+	tag: String,
+	media: [String]
 });
 
 /* Define Model: Goal */

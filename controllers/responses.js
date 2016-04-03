@@ -18,25 +18,23 @@ const render = views(__dirname + '/../views', {
 
 module.exports.process = function *process() {
 
-  /* IF REDIRECTING, make sure to set status to 307 */
+  /* IF REDIRECTING, make sure to set status to 307  
+   *
+   * Note: request body is not parsed here
+   */
+
 
   try {
-     const routineState = yield db.RoutineState.findOne();
-     console.log("@responses/process, routineState = ",routineState);
+    const routineState = yield db.RoutineState.findOne();
+    console.log("@responses/process, routineState = ",routineState);
 
-     if (!routineState || routineState.routine == 'default') {
-      this.status = 307;
-      return this.redirect('/messages');
+    var redirect = '/messages'; // default
 
-     } else {
+    if (routineState.routine == 'goal')
+      redirect = routineState.callback;
 
-      if (routineState.routine == 'goal') {
-        this.status = 307;
-        return this.redirect(routineState.callback);
-       } else {
-          return console.error("Error: routineState doesn't match - ",routineState);
-       }
-     }
+     this.status = 307;
+     return this.redirect(redirect);
   }
   catch(err) {
     console.error("Error finding routineState - ",err);

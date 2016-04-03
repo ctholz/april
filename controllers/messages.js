@@ -72,10 +72,14 @@ module.exports.delete = function *(id) {
 module.exports.create = function *create() {
 
   var res = yield parse(this);
-  console.log("Twilio Res | \n",res,'\n\n');
 
-  // For Twilio compatibility
-  var body = ('Body' in res) ? res['Body'] : res.message;
+  // Check if media in body
+  var media = [];
+  if ('NumMedia' in res && parseInt(res['NumMedia']) > 0) {
+    for (var i = 0; i < parseInt(res['NumMedia']); i++) {
+      media.push(res['MediaUrl' + i])
+    }
+  };
 
   // Parse tag, if any, from note
     // Regex *should* match #tag body
@@ -84,9 +88,10 @@ module.exports.create = function *create() {
   var fields = function(match) {
     return {
       tag: (match) ? match[1] : null,
-      body: (match) ? match[2] : body
+      body: (match) ? match[2] : res['Body'],
+      media: media
     }
-  }(body.match(tag_regex));
+  }(res['Body'].match(tag_regex));
 
   yield db.Note.create(fields, function(err, note) {
     if (err) console.error("Error creating new note: ",err);
