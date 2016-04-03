@@ -15,10 +15,7 @@ module.exports.home = function *home(ctx) {
   var notes = yield db.Note.find().sort({ _id: -1 })
   
   // Fetch today's goal
-    // TODO - clean up the process of fetching today's goal
-  var today = new Date();
-  today.setHours(0);
-  var goal = yield db.Goal.find({ created_at: { "$gte": today }}).sort('-created_at');
+  var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');
   goal = (goal.length == 0) ? null : goal[0]
 
   // Fetch tags, uniqify using Set

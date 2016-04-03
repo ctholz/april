@@ -72,7 +72,7 @@ module.exports = {
 	close: function *() {
 		try {
 
-			var goal = yield db.Goal.find({ created_at: { "$gte": get_today_delineator() }}).sort('-created_at');
+			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
 			twilio_client.sendSMS(config.twilio.admin, "Today's goal was: '" + message + "' Did you complete it?");
