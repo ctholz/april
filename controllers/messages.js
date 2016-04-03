@@ -72,6 +72,7 @@ module.exports.delete = function *(id) {
 module.exports.create = function *create() {
 
   var res = yield parse(this);
+  console.log("Twilio Res | \n",res,'\n\n');
 
   // For Twilio compatibility
   var body = ('Body' in res) ? res['Body'] : res.message;
