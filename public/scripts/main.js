@@ -2,6 +2,7 @@
 
 $(function() {
 	$('.tag-header').on('click', sortByHeader);
+	$('.message').on('click', archiveMessage);
 });
 
 function sortByHeader(e) {
@@ -26,4 +27,18 @@ function sortByHeader(e) {
 
 	$('.selected').removeClass('selected');
 	$(this).toggleClass('selected');
+};
+
+function archiveMessage(e) {
+
+	var $note = $(this);
+
+	$.ajax({
+		url: '/messages/' + $note.data('id'),
+		method: 'DELETE',
+		success: function(msg) {
+			console.log("Success! ",msg);
+			$note.hide(300).remove();
+		}
+	})
 };

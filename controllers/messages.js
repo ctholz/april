@@ -12,7 +12,7 @@ const render = views(__dirname + '/../views', {
 module.exports.home = function *home(ctx) {
   
   // Fetch notes
-  var notes = yield db.Note.find().sort({ _id: -1 })
+  var notes = yield db.Note.find({archived: {$ne: true}}).sort({ _id: -1 })
   
   // Fetch today's goal
   var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');
@@ -89,7 +89,8 @@ module.exports.create = function *create() {
     return {
       tag: (match) ? match[1] : null,
       body: (match) ? match[2] : res['Body'],
-      media: media
+      media: media,
+      archived: false
     }
   }(res['Body'].match(tag_regex));
 
@@ -99,6 +100,18 @@ module.exports.create = function *create() {
   });
 
   this.redirect('/');
+};
+
+
+/* JSON endpoint for archiving a note */
+module.exports.archive = function *archive(id) {
+  try {
+      yield db.Note.findByIdAndUpdate(id, { archived: true })
+      this.status = 200;
+  } catch (err) {
+    console.error("[ Error ]... @" + this.path + " archiving Note id = " + id + " - " + err);
+  }
+
 };
 
 

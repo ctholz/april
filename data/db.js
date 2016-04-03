@@ -19,7 +19,8 @@ var noteSchema = new mongoose.Schema({
 	created_at: { type: Date, default: Date.now },
 	body: String,
 	tag: String,
-	media: [String]
+	media: [String],
+	archived: Boolean
 });
 
 /* Define Model: Goal */

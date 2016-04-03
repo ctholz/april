@@ -29,6 +29,11 @@ textarea {
   font-style: italic;
 }
 
+.message:hover {
+  text-decoration: line-through;
+  cursor: pointer;
+}
+
 .tag {
   background-color: #fff200; /* thanks Vox! */
   font-size: 12pt;

@@ -27,7 +27,7 @@
 	{% endif %}
 
     {% for note in notes %}
-      <li class="message" data-tag="{{note.tag}}">
+      <li class="message" data-tag="{{note.tag}}" data-id="{{note.id}}">
       	{% if note.tag %}<span class="tag">#{{note.tag}}</span>{% endif %}
       	{{ note.body }}
         {% for medium in note.media %}
