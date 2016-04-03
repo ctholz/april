@@ -28,6 +28,7 @@ module.exports = {
 
 			// Update routineState to next step
 			yield routineState.update({ callback: '/routines/goal/create', routine: 'goal' })
+			this.status = 200;
 		}
 		catch(err) {
 			console.error("[ Error ]... @" + this.path + " - ",err)
@@ -46,6 +47,7 @@ module.exports = {
 
 			yield routineState.update({ routine: 'default', callback: '/routine/default' })
 
+			this.status = 200;
 		} catch(err) {
 			console.error("[ Error ]... @" + this.path + " - ",err)
 		}
@@ -53,15 +55,10 @@ module.exports = {
 
 	remind: function *() {
 		try {
-			// TODO - find TODAY's goal 
-
-			var goal = yield db.Goal.find({ created_at: { "$gte": get_today_delineator() }}).sort('-created_at');
-			
+			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');			
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
 			twilio_client.sendSMS("+17134126344", "Goal Reminder: " + message);
-
-			this.status = 200;
 
 		} catch(err) {
 			console.error("[ Error ]... @" + this.path + " - ",err)
@@ -81,7 +78,6 @@ module.exports = {
 			yield routineState.update({ routine: 'goal', callback: '/routines/goal/update' });
 
 			this.status = 200;
-			return;
 
 		} catch(err) {
 			console.error("[ Error ]... @" + this.path + " - ",err)
@@ -130,10 +126,3 @@ module.exports = {
 		}
 	}
 }
-
-
-function get_today_delineator() {
-	var today = new Date();
-	today.setHours(0);
-	return today;
-};

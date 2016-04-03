@@ -16,18 +16,18 @@
   {% endif %}
 
   <ul class="messages">  	
-  	<li class="message"><b>Notes...</b></li>
+  	<li><b>Notes...</b></li>
 
   	{% if tags.length > 0 %}
   	<li>
 	  	{% for tag in tags %}
-	  	  <span class="tag tag-header">#{{tag}}</span>
+	  	  <span class="tag tag-header" data-tag="{{tag}}">#{{tag}}</span>
 	  	{% endfor %}
 	</li>
 	{% endif %}
 
     {% for note in notes %}
-      <li class="message">
+      <li class="message" data-tag="{{note.tag}}">
       	{% if note.tag %}<span class="tag">#{{note.tag}}</span>{% endif %}
       	{{ note.body }}
      	<span class="message-date">{{ note.created_at.toDateString() }}</span>
@@ -38,4 +38,9 @@
     <textarea placeholder="Insert a message" name="message"
       onkeydown="if (event.keyCode == 13) document.getElementById('message-form').submit();"></textarea>
   </form>
+
+  <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script> 
+  <script type="text/javascript" src="/scripts/main.js"></script>
+
+
 {% endblock %}

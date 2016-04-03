@@ -37,6 +37,13 @@ textarea {
 
 .tag-header {
   font-size: 30px;
+  cursor: pointer;
+}
+
+.selected {
+  font-style: italic;
+  font-size: 44px;
+  font-weight: normal;
 }
 
 
