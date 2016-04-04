@@ -4,7 +4,7 @@
  */
 
 var request = require('request');
-var root_url = (process.env.NODE_ENV) ? 'https://blooming-springs-67127.herokuapp.com' : 'http://localhost:3000';
+var root_url = (process.env.NODE_ENV) ? 'https://ohbehave.herokuapp.com' : 'http://localhost:3000';
 
 if (process.argv.length < 3)
 	return console.error("\n[ Error ]... Need to input the goal routine path.\n");
