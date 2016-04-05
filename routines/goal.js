@@ -22,6 +22,13 @@ module.exports = {
 		twilio_client.sendSMS(config.twilio.admin, "What is the ONE Thing you could be doing today such that everything else will become easier or unecessary?")
 
 		try {
+			// Ensure that Goal was closed last night, if not, close it
+			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort({'created_at': -1}).limit(1);
+		
+			if (goal.length > 0)
+			  yield goal[0].update({ completed: false, notes: "N/A: auto-closed." });
+		  
+
 			// Fetch current routineState
 			const routineState = yield db.RoutineState.findOne()
 			// TODO - what if routineState is missing?
@@ -55,7 +62,7 @@ module.exports = {
 
 	remind: function *() {
 		try {
-			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');			
+			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort({'created_at': -1});			
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
 			twilio_client.sendSMS("+17134126344", "Goal Reminder: " + message);
@@ -69,7 +76,7 @@ module.exports = {
 	close: function *() {
 		try {
 
-			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort('-created_at');
+			var goal = yield db.Goal.find({ "completed": { "$exists": false } }).sort({'created_at': -1});
 			var message = (goal.length == 0) ? "GOAL NOT FOUND" : goal[0].body;
 
 			twilio_client.sendSMS(config.twilio.admin, "Today's goal was: '" + message + "' Did you complete it?");
