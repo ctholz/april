@@ -4,7 +4,10 @@
  */
 
 var request = require('request');
-var root_url = (process.env.NODE_ENV) ? 'https://ohbehave.herokuapp.com' : 'http://localhost:3000';
+
+const config = require('../../../config/config')();
+const root_url = config.root_url;
+
 var req_path = '/routines/mantra/';
 
 // Check if input method, otherwise default to none

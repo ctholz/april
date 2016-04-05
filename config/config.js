@@ -18,7 +18,7 @@ var env = {
 
 	"staging": {
 		mode: "staging",
-
+		port: process.env.PORT || '3000'
 	},
 
 	"production": {
@@ -28,7 +28,12 @@ var env = {
 }
 
 module.exports = function(mode) {
+
 	// Set env
 	config.env = env[process.env.NODE_ENV || mode || process.argv[2] || "development"] || env.development
+	
+	// Set root url
+	config.root_url = process.env.ROOT_URL || ('http://localhost:' + config.env.port)
+
 	return config
 }

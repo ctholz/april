@@ -4,7 +4,9 @@
  */
 
 var request = require('request');
-var root_url = (process.env.NODE_ENV) ? 'https://ohbehave.herokuapp.com' : 'http://localhost:3000';
+
+const config = require('../../../config/config')();
+const root_url = config.root_url;
 
 if (process.argv.length < 3)
 	return console.error("\n[ Error ]... Need to input the goal routine path.\n");
